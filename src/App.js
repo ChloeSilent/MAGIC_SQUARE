@@ -13,16 +13,28 @@ class App extends React.Component {
     startY: 100,
     shiftX: 0,
     shiftY: 0,
+    background_color: '#ea4c89',
+    border_color: '#864AFC',
     draggable: false
   }
+
+  componentDidMount() {
+    let background_color = this.getRandomColorGenerator();
+    let border_color = this.getRandomColorGenerator();
+    this.setState({
+      background_color, border_color
+    })
+  }
+
 
   handleMouseDown = (e) => {
 
     let squrePosition = document.querySelector('.square');
+
     this.setState({
       draggable: true,
       shiftX: e.pageX - squrePosition.getBoundingClientRect().left,
-      shiftY: e.pageY - squrePosition.getBoundingClientRect().top
+      shiftY: e.pageY - squrePosition.getBoundingClientRect().top,
     })
     document.addEventListener('mousemove', this.handleMouseMove);
   }
@@ -33,6 +45,12 @@ class App extends React.Component {
       draggable: false
     })
     document.removeEventListener('mousemove', this.handleMouseMove);
+  }
+
+  getRandomColorGenerator = () => {
+    const color = "#" + ("000000" + (Math.random() * 0x1000000 | 0).toString(16)).substr(-6);
+    console.log(color);
+    return color;
   }
 
   handleMouseMove = (e) => {
@@ -56,7 +74,8 @@ class App extends React.Component {
     if (LEFT_X < newX && newX < RIGHT_X) {
       this.setState({
         shiftX: this.state.shiftX - shift.x,
-        startX: this.state.startX - shift.x
+        startX: this.state.startX - shift.x,
+        background_color: this.getRandomColorGenerator()
       })
     }
 
@@ -66,7 +85,8 @@ class App extends React.Component {
 
       this.setState({
         shiftY: this.state.shiftY - shift.y,
-        startY: this.state.startY - shift.y
+        startY: this.state.startY - shift.y,
+        border_color: this.getRandomColorGenerator()
       })
     }
 
@@ -80,6 +100,8 @@ class App extends React.Component {
         <Square
           x={this.state.startX}
           y={this.state.startY}
+          background_color={this.state.background_color}
+          border_color={this.state.border_color}
           onMouseDown={e => this.handleMouseDown(e)}
           onMouseUp={this.handleMouseUp}
         />
